@@ -1,0 +1,5 @@
+.cache
+.DS_store
+.xmake
+build
+compile_commands.json
