@@ -14,7 +14,6 @@ option("board")
 compartment("pqc_benchmark")
 	add_deps("freestanding", "debug", "mlkem_library", "mldsa_library")
 	add_files("benchmark.cc")
-	add_includedirs("../../include")
 
 
 -- Firmware image for the example.
