@@ -13,6 +13,7 @@ option("board")
 
 compartment("pqc_benchmark")
 	add_deps("freestanding", "debug", "mlkem_library", "mldsa_library")
+	add_deps("unwind_error_handler")
 	add_files("benchmark.cc")
 
 
@@ -26,7 +27,7 @@ firmware("pqc_benchmark_example")
 				compartment = "pqc_benchmark",
 				priority = 1,
 				entry_point = "benchmark",
-				stack_size = 0xff00,
+				stack_size = 4096,
 				trusted_stack_frames = 2
 			}
 		}, {expand = false})
