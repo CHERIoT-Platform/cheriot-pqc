@@ -10,11 +10,10 @@
 #include <thread.h>
 
 #include <mlkem_native.h>
-constexpr size_t MLKEMPublicKeyBytes    = CRYPTO_PUBLICKEYBYTES;
-constexpr size_t MLKEMSecretKeyBytes    = CRYPTO_SECRETKEYBYTES;
-constexpr size_t MLKEMSharedSecretBytes = CRYPTO_BYTES;
-#undef CRYPTO_PUBLICKEYBYTES
-#undef CRYPTO_SECRETKEYBYTES
+constexpr size_t MLKEMPublicKeyBytes    = MLKEM768_PUBLICKEYBYTES;
+constexpr size_t MLKEMSecretKeyBytes    = MLKEM768_SECRETKEYBYTES;
+constexpr size_t MLKEMCypertextBytes    = MLKEM768_CIPHERTEXTBYTES;
+constexpr size_t MLKEMSharedSecretBytes = MLKEM_BYTES;
 #undef CRYPTO_BYTES
 #define MLK_CONFIG_API_NO_SUPERCOP
 #include <mldsa_native.h>
@@ -30,7 +29,7 @@ namespace
 	// ML-KEM things
 	uint8_t mlkem_public_key[MLKEMPublicKeyBytes];
 	uint8_t mlkem_secret_key[MLKEMSecretKeyBytes];
-	uint8_t mlkem_ciphertext[CRYPTO_CIPHERTEXTBYTES];
+	uint8_t mlkem_ciphertext[MLKEMCypertextBytes];
 	uint8_t mlkem_shared_secret_original[MLKEMSharedSecretBytes];
 	uint8_t mlkem_shared_secret_decrypted[MLKEMSharedSecretBytes];
 	uint8_t mlkem_result[32];
@@ -94,7 +93,6 @@ int __cheri_compartment("pqc_benchmark") benchmark()
 
 	rc =
 	  mldsa44_signature(mldsa_signature,
-	                    &signatureLength,
 	                    reinterpret_cast<const uint8_t *>(TestMessage.data()),
 	                    TestMessage.size(),
 	                    reinterpret_cast<const uint8_t *>(Context.data()),
@@ -108,7 +106,6 @@ int __cheri_compartment("pqc_benchmark") benchmark()
 	reportStack("Signed message with ML-DSA");
 
 	rc = mldsa44_verify(mldsa_signature,
-	                    signatureLength,
 	                    reinterpret_cast<const uint8_t *>(TestMessage.data()),
 	                    TestMessage.size(),
 	                    reinterpret_cast<const uint8_t *>(Context.data()),
@@ -119,7 +116,6 @@ int __cheri_compartment("pqc_benchmark") benchmark()
 
 	mldsa_signature[4]++;
 	rc = mldsa44_verify(mldsa_signature,
-	                    signatureLength,
 	                    reinterpret_cast<const uint8_t *>(TestMessage.data()),
 	                    TestMessage.size(),
 	                    reinterpret_cast<const uint8_t *>(Context.data()),
