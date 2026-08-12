@@ -52,19 +52,19 @@ int __cheri_compartment("pqc_benchmark") benchmark()
 	int       rc       = 0;
 	auto      lastTime = rdcycle64();
 	auto      reportStack = [&](const char *msg) {
-        auto      time   = rdcycle64();
-        ptraddr_t lowest = stack_lowest_used_address();
-        ssize_t   used   = stackTop - lowest;
-        Debug::Invariant(rc == 0, "ERROR: {} failed! {}", msg, rc);
-        Debug::log("{}: stack used: {} bytes, cycles elapsed: {}",
-                   msg,
-                   used,
-                   static_cast<int64_t>(time - lastTime));
-        // Reset the stack depth
-        Timeout t{0};
-        thread_sleep(&t);
-        // Record the cycle counter for the next operation
-        lastTime = rdcycle64();
+		auto      time   = rdcycle64();
+		ptraddr_t lowest = stack_lowest_used_address();
+		ssize_t   used   = stackTop - lowest;
+		Debug::Invariant(rc == 0, "ERROR: {} failed! {}", msg, rc);
+		Debug::log("{}: stack used: {} bytes, cycles elapsed: {}",
+		           msg,
+		           used,
+		           static_cast<int64_t>(time - lastTime));
+		// Reset the stack depth
+		Timeout t{0};
+		thread_sleep(&t);
+		// Record the cycle counter for the next operation
+		lastTime = rdcycle64();
 	};
 	reportStack("Starting");
 	rc =
